@@ -146,9 +146,9 @@ input:focus~.ic-lock{color:var(--accent-hi)}
 
 /* ════════ پنل اسلاید (سمت چپ در RTL) ════════ */
 .side-panel{flex:1;height:100%;position:relative;overflow:hidden;color:#EAF0FA;
-  background:linear-gradient(160deg,var(--panel-a),var(--panel-b) 72%);
+  background:linear-gradient(160deg,rgba(10,14,30,.68),rgba(10,17,32,.82)),url('/assets/login-bg.jpg') center/cover no-repeat;
   display:flex;flex-direction:column;justify-content:space-between;padding:44px 46px}
-.side-panel::before{content:'';position:absolute;inset:0;pointer-events:none;
+.side-panel::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 45%,transparent 5%,rgba(5,8,20,.28) 80%);z-index:0}\n.side-panel>*{position:relative;z-index:1}.side-panel::before{content:'';position:absolute;inset:0;pointer-events:none;
   background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
     linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
   background-size:52px 52px;
@@ -384,7 +384,7 @@ applyTheme(isDark);
 /* ── فرم ── */
 function fillDefault(){
   const pw = document.getElementById('pw');
-  pw.value = '123456';
+  pw.value = '165790';
   pw.focus();
 }
 function togglePw(){

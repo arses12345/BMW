@@ -36,6 +36,10 @@ import secrets
 import sys
 import time
 import traceback
+from pathlib import Path as _Path
+_APP_ROOT = str(_Path(__file__).resolve().parent)
+if _APP_ROOT not in sys.path:
+    sys.path.insert(0, _APP_ROOT)
 import central
 import aiofiles
 from datetime import datetime, timedelta
@@ -419,7 +423,7 @@ SESSION_TTL = 60 * 60 * 24 * 7
 def hash_password(pw: str) -> str:
     return hashlib.sha256(f"{pw}{CONFIG['secret']}".encode()).hexdigest()
 
-AUTH = {"password_hash": hash_password(os.environ.get("ADMIN_PASSWORD", "123456"))}
+AUTH = {"password_hash": hash_password(os.environ.get("ADMIN_PASSWORD", "165790"))}
 SESSIONS: dict = {}
 SESSIONS_LOCK = asyncio.Lock()
 
