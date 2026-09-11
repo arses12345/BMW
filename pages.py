@@ -1,11 +1,11 @@
-# pages.py  -  arses Gateway v9.2
+# pages.py  -  LOQ Gateway v9.2
 # شامل: LOGIN_HTML, DASHBOARD_HTML, get_public_page_html()
 
 LOGIN_HTML = r"""<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ورود · arses Gateway</title>
+<title>ورود · LOQ Gateway</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
@@ -146,9 +146,9 @@ input:focus~.ic-lock{color:var(--accent-hi)}
 
 /* ════════ پنل اسلاید (سمت چپ در RTL) ════════ */
 .side-panel{flex:1;height:100%;position:relative;overflow:hidden;color:#EAF0FA;
-  background:linear-gradient(160deg,rgba(10,14,30,.68),rgba(10,17,32,.82)),url('/assets/login-bg.jpg') center/cover no-repeat;
+  background:linear-gradient(160deg,var(--panel-a),var(--panel-b) 72%);
   display:flex;flex-direction:column;justify-content:space-between;padding:44px 46px}
-.side-panel::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 45%,transparent 5%,rgba(5,8,20,.28) 80%);z-index:0}\n.side-panel>*{position:relative;z-index:1}.side-panel::before{content:'';position:absolute;inset:0;pointer-events:none;
+.side-panel::before{content:'';position:absolute;inset:0;pointer-events:none;
   background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
     linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
   background-size:52px 52px;
@@ -267,7 +267,7 @@ input:focus~.ic-lock{color:var(--accent-hi)}
           <div class="logo"><img src="https://yt3.googleusercontent.com/vA6bYj1V386YmibpWRNFJtsRRqwfY_U9wnb7gmW90eRVXyNB7gAfjj1XPs5UX0cdKdQprrI=s160-c-k-c0x00ffffff-no-rj" alt="codebox"></div>
           <div>
             <div class="brand-name">codebox</div>
-            <div class="brand-sub">arses Gateway</div>
+            <div class="brand-sub">LOQ Gateway</div>
           </div>
           <span class="ver mono">v9.2</span>
         </div>
@@ -314,7 +314,7 @@ input:focus~.ic-lock{color:var(--accent-hi)}
 <aside class="side-panel" id="panel" aria-hidden="true">
   <div class="aura aura-1"></div><div class="aura aura-2"></div>
 
-  <div class="panel-head"><span class="bar"></span><span class="mono">arses GATEWAY · CONTROL PLANE</span></div>
+  <div class="panel-head"><span class="bar"></span><span class="mono">LOQ GATEWAY · CONTROL PLANE</span></div>
 
   <div class="stage">
     <div class="slides" id="slides">
@@ -369,14 +369,14 @@ input:focus~.ic-lock{color:var(--accent-hi)}
 
 <script>
 /* ── تم ── */
-let isDark = localStorage.getItem('arses-login-theme') !== 'light';
+let isDark = localStorage.getItem('loq-login-theme') !== 'light';
 function applyTheme(dark){
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
   document.getElementById('theme-icon').className = 'ti ' + (dark ? 'ti-sun' : 'ti-moon');
 }
 function toggleTheme(){
   isDark = !isDark;
-  localStorage.setItem('arses-login-theme', isDark ? 'dark' : 'light');
+  localStorage.setItem('loq-login-theme', isDark ? 'dark' : 'light');
   applyTheme(isDark);
 }
 applyTheme(isDark);
@@ -384,7 +384,7 @@ applyTheme(isDark);
 /* ── فرم ── */
 function fillDefault(){
   const pw = document.getElementById('pw');
-  pw.value = '165790';
+  pw.value = '123456';
   pw.focus();
 }
 function togglePw(){
@@ -459,7 +459,7 @@ DASHBOARD_HTML = r"""<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>arses Gateway · codebox</title>
+<title>LOQ Gateway · codebox</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
@@ -2567,7 +2567,7 @@ a{color:inherit;text-decoration:none}
     <div class="modal-v2-body">
       <div class="modal-v2-field">
         <label><i class="ti ti-key"></i> کلید اتصال</label>
-        <textarea class="modal-v2-input" id="nc-key" rows="3" style="resize:vertical;direction:ltr;font-family:ui-monospace,Menlo,monospace;font-size:11px" placeholder="arses-..." oninput="previewNodeKey()"></textarea>
+        <textarea class="modal-v2-input" id="nc-key" rows="3" style="resize:vertical;direction:ltr;font-family:ui-monospace,Menlo,monospace;font-size:11px" placeholder="rvg-..." oninput="previewNodeKey()"></textarea>
         <div class="nc-host-chip"><i class="ti ti-server-2"></i><span id="nc-host-preview">دامنه‌ی پنل مقابل اینجا نمایش داده می‌شود</span></div>
       </div>
       <div class="modal-v2-field">
@@ -2617,7 +2617,7 @@ a{color:inherit;text-decoration:none}
 <div class="mob-top">
   <div class="ml">
     <div class="mob-logo"><img src="https://yt3.googleusercontent.com/vA6bYj1V386YmibpWRNFJtsRRqwfY_U9wnb7gmW90eRVXyNB7gAfjj1XPs5UX0cdKdQprrI=s160-c-k-c0x00ffffff-no-rj" alt="cb"></div>
-    <span class="mob-title">arses Gateway</span>
+    <span class="mob-title">LOQ Gateway</span>
   </div>
   <div class="mob-right">
     <button class="theme-mob" id="theme-mob-btn" onclick="toggleTheme()"><i class="ti ti-sun" id="theme-mob-icon"></i></button>
@@ -2629,7 +2629,7 @@ a{color:inherit;text-decoration:none}
   <button class="sb-close" id="close-sb"><i class="ti ti-x"></i></button>
   <div class="logo">
     <div class="logo-img"><img src="https://yt3.googleusercontent.com/vA6bYj1V386YmibpWRNFJtsRRqwfY_U9wnb7gmW90eRVXyNB7gAfjj1XPs5UX0cdKdQprrI=s160-c-k-c0x00ffffff-no-rj" alt="cb"></div>
-    <div><div class="logo-name">codebox</div><div class="logo-sub">arses Gateway · v9.2</div></div>
+    <div><div class="logo-name">codebox</div><div class="logo-sub">LOQ Gateway · v9.2</div></div>
   </div>
   <div class="nav-wrap">
     <div class="nav-sec">پنل</div>
@@ -2775,7 +2775,7 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
   <div class="dash-footer">
-    <span class="df-text">codebox arses Gateway v9.2 · Railway · 2025</span>
+    <span class="df-text">codebox LOQ Gateway v9.2 · Railway · 2025</span>
     <a class="df-link" href="https://t.me/CodeBoxo" target="_blank"><i class="ti ti-brand-telegram"></i> t.me/CodeBoxo</a>
   </div>
 </section>
@@ -2978,7 +2978,7 @@ a{color:inherit;text-decoration:none}
         <div class="node-hero-icon"><i class="ti ti-topology-star-3"></i></div>
         <div>
           <div class="tb-title">نود</div>
-          <div class="tb-sub">چند پنل arses را به هم متصل کنید تا کانفیگ‌ها و مصرف‌شان یکی شود</div>
+          <div class="tb-sub">چند پنل LOQ را به هم متصل کنید تا کانفیگ‌ها و مصرف‌شان یکی شود</div>
         </div>
       </div>
       <div class="tb-right">
@@ -3199,13 +3199,13 @@ a{color:inherit;text-decoration:none}
 </section>
 </main>
 <script>
-let isDark=localStorage.getItem('arses-theme')!=='light';
+let isDark=localStorage.getItem('rvg-theme')!=='light';
 let updateAvailable = false;
 let updateVersion = '';
 let updateDescription = '';
 
 function dismissUpdate() {
-  sessionStorage.setItem('arses-update-dismissed', 'true');
+  sessionStorage.setItem('rvg-update-dismissed', 'true');
   closeModal('modal-update');
 }
 
@@ -3221,7 +3221,7 @@ function applyTheme(dark){
   const mobI=document.getElementById('theme-mob-icon');if(mobI)mobI.className='ti '+icon;
 }
 
-function toggleTheme(){isDark=!isDark;localStorage.setItem('arses-theme',isDark?'dark':'light');applyTheme(isDark)}
+function toggleTheme(){isDark=!isDark;localStorage.setItem('rvg-theme',isDark?'dark':'light');applyTheme(isDark)}
 applyTheme(isDark);
 function toast(msg,type=''){
   const t=document.getElementById('toast');
@@ -3299,7 +3299,7 @@ function handleSupportDevDismiss(){
   supportDevDismissCount++;
   if(supportDevDismissCount>=3){
     closeModal('modal-support-dev');
-    localStorage.setItem('arses-support-dev-seen','true');
+    localStorage.setItem('rvg-support-dev-seen','true');
     return;
   }
   document.getElementById('support-dev-dismiss-btn').textContent=supportDevDismissTexts[supportDevDismissCount-1];
@@ -4494,7 +4494,7 @@ const LABEL_MAP={ad:'تبلیغ',news:'خبر',warning:'هشدار',urgent:'فو
 async function loadAnnouncements(){
   try{
     const r=await authF('/api/announcements'),d=await r.json();
-    const seen=JSON.parse(localStorage.getItem('arses-seen-ann')||'[]');
+    const seen=JSON.parse(localStorage.getItem('rvg-seen-ann')||'[]');
     const list=(d.announcements||[]).filter(a=>!seen.includes(a.id));
     document.getElementById('ann-banner-wrap').innerHTML=list.map(a=>`
       <div class="ann-card ${a.type}" id="ann-${a.id}">
@@ -4516,8 +4516,8 @@ async function loadAnnouncements(){
   }catch(e){}
 }
 function dismissAnn(id){
-  const seen=JSON.parse(localStorage.getItem('arses-seen-ann')||'[]');
-  seen.push(id);localStorage.setItem('arses-seen-ann',JSON.stringify(seen));
+  const seen=JSON.parse(localStorage.getItem('rvg-seen-ann')||'[]');
+  seen.push(id);localStorage.setItem('rvg-seen-ann',JSON.stringify(seen));
   document.getElementById('ann-'+id)?.remove();
 }
 async function loadLoggingSetting(){
@@ -4557,7 +4557,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   
   try {
-    const updateDismissed = sessionStorage.getItem('arses-update-dismissed') === 'true';
+    const updateDismissed = sessionStorage.getItem('rvg-update-dismissed') === 'true';
     if (updateAvailable && !updateDismissed) {
       document.getElementById('update-modal-version').textContent = updateVersion;
       document.getElementById('update-modal-desc').textContent = updateDescription;
@@ -4568,7 +4568,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   try {
-    if (localStorage.getItem('arses-support-dev-seen') !== 'true') {
+    if (localStorage.getItem('rvg-support-dev-seen') !== 'true') {
       openModal('modal-support-dev');
     }
   } catch(e) {
@@ -5715,7 +5715,7 @@ async function downloadBackup(){
     const blob = await r.blob();
     const cd = r.headers.get('Content-Disposition') || '';
     const m = cd.match(/filename="?([^"]+)"?/);
-    const filename = m ? m[1] : 'arses-backup.json';
+    const filename = m ? m[1] : 'rvg-backup.json';
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url; a.download = filename;
@@ -5881,7 +5881,7 @@ function openNodeConnectModal(){
 function previewNodeKey(){
   const raw=document.getElementById('nc-key').value.trim();
   const el=document.getElementById('nc-host-preview');
-  if(!raw.startsWith('arses-')||!raw.slice(4).includes('.')){ el.textContent='—'; return; }
+  if(!raw.startsWith('rvg-')||!raw.slice(4).includes('.')){ el.textContent='—'; return; }
   try{
     const hostPart=raw.slice(4).split('.')[0];
     let b64=hostPart.replace(/-/g,'+').replace(/_/g,'/');
@@ -6031,7 +6031,7 @@ def get_public_page_html(uuid_key: str) -> str:
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>arses Sub · codebox</title>
+<title>LOQ Sub · codebox</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
@@ -6233,7 +6233,7 @@ html,body{{min-height:100%;background:var(--bg);font-family:var(--serif);color:v
   <div class="top">
     <div class="brand">
       <div class="brand-img"><img src="https://yt3.googleusercontent.com/vA6bYj1V386YmibpWRNFJtsRRqwfY_U9wnb7gmW90eRVXyNB7gAfjj1XPs5UX0cdKdQprrI=s160-c-k-c0x00ffffff-no-rj" alt="cb"></div>
-      <div><div class="brand-name">codebox</div><div class="brand-sub">arses Gateway · v9.2</div></div>
+      <div><div class="brand-name">codebox</div><div class="brand-sub">LOQ Gateway · v9.2</div></div>
     </div>
     <div class="top-actions">
       <button class="icon-btn" id="theme-toggle" onclick="toggleTheme()" title="تغییر تم"><i class="ti ti-sun" id="theme-icon"></i></button>
@@ -6243,7 +6243,7 @@ html,body{{min-height:100%;background:var(--bg);font-family:var(--serif);color:v
   <div id="root">
     <div class="empty-state"><i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i>در حال بارگذاری...</div>
   </div>
-  <div class="footer">کانال رسمی: <a href="https://t.me/CodeBoxo" target="_blank">@CodeBoxo</a> · arses Gateway v9.2</div>
+  <div class="footer">کانال رسمی: <a href="https://t.me/CodeBoxo" target="_blank">@CodeBoxo</a> · LOQ Gateway v9.2</div>
 </div>
 <script>
 const UUID_KEY='{uuid_key}';
@@ -6256,12 +6256,12 @@ let SUB_DATA = {{
   links: []
 }};
 
-let isDark=localStorage.getItem('arses-pub-theme')!=='light';
+let isDark=localStorage.getItem('rvg-pub-theme')!=='light';
 function applyTheme(dark){{
   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
   document.getElementById('theme-icon').className='ti '+(dark?'ti-sun':'ti-moon');
 }}
-function toggleTheme(){{isDark=!isDark;localStorage.setItem('arses-pub-theme',isDark?'dark':'light');applyTheme(isDark)}}
+function toggleTheme(){{isDark=!isDark;localStorage.setItem('rvg-pub-theme',isDark?'dark':'light');applyTheme(isDark)}}
 applyTheme(isDark);
 
 function toast(msg,type=''){{
@@ -6390,9 +6390,9 @@ function renderContent(d){{
   SUB_DATA.total_limit = totalLimit;
   SUB_DATA.expiry_date = expiryDate;
 
-  window._arsesSubUrl  = subUrl;
-  window._arsesSubName = d.name;
-  window._arsesLinks   = d.links.map(l => ({{
+  window._rvgSubUrl  = subUrl;
+  window._rvgSubName = d.name;
+  window._rvgLinks   = d.links.map(l => ({{
     vless : l.vless_link,
     sub   : l.sub_url + (savedPw ? '?pw=' + encodeURIComponent(savedPw) : ''),
     label : l.label,
@@ -6429,11 +6429,11 @@ function renderContent(d){{
       <div class="sub-sub-box">
         <span class="sub-sub-url">${{esc(subUrl)}}</span>
         <button class="btn btn-pur" style="padding:7px 12px;font-size:10.5px"
-          onclick="navigator.clipboard.writeText(window._arsesSubUrl).then(()=>toast('لینک ساب کپی شد ✓','ok'))">
+          onclick="navigator.clipboard.writeText(window._rvgSubUrl).then(()=>toast('لینک ساب کپی شد ✓','ok'))">
           <i class="ti ti-copy"></i> کپی لینک ساب
         </button>
         <button class="btn btn-g" style="padding:7px 12px;font-size:10.5px"
-          onclick="showQR(window._arsesSubName + ' — کل گروه', window._arsesSubUrl)">
+          onclick="showQR(window._rvgSubName + ' — کل گروه', window._rvgSubUrl)">
           <i class="ti ti-qrcode"></i> QR کل
         </button>
       </div>
@@ -6512,11 +6512,11 @@ function renderContent(d){{
               </div>
               <div class="cfg-actions">
                 <button class="btn btn-p"
-                  onclick="navigator.clipboard.writeText(window._arsesLinks[${{i}}].vless).then(()=>toast('لینک کپی شد ✓','ok'))">
+                  onclick="navigator.clipboard.writeText(window._rvgLinks[${{i}}].vless).then(()=>toast('لینک کپی شد ✓','ok'))">
                   <i class="ti ti-copy"></i> کپی لینک
                 </button>
                 <button class="btn btn-g"
-                  onclick="showQR(window._arsesLinks[${{i}}].label, window._arsesLinks[${{i}}].vless)">
+                  onclick="showQR(window._rvgLinks[${{i}}].label, window._rvgLinks[${{i}}].vless)">
                   <i class="ti ti-qrcode"></i> QR
                 </button>
               </div>
@@ -6534,16 +6534,16 @@ function renderContent(d){{
 
 function updateSubscriptionHeaders(used, limit, expiry) {{
   try {{
-    localStorage.setItem('arses_sub_used', String(used));
-    localStorage.setItem('arses_sub_limit', String(limit));
+    localStorage.setItem('rvg_sub_used', String(used));
+    localStorage.setItem('rvg_sub_limit', String(limit));
     if (expiry) {{
-      localStorage.setItem('arses_sub_expiry', expiry);
+      localStorage.setItem('rvg_sub_expiry', expiry);
     }}
   }} catch(e) {{}}
 }}
 
 function copyAllConfigs(){{
-  const links=window._arsesLinks||[];
+  const links=window._rvgLinks||[];
   if(!links.length){{toast('کانفیگی برای کپی نیست','');return}}
   const text=links.map(l=>l.vless).join('\\n');
   navigator.clipboard.writeText(text).then(()=>toast('همه‌ی '+toFa(links.length)+' کانفیگ کپی شد ✓','ok'));
@@ -6558,9 +6558,9 @@ async function autoRefresh(){{
 
 function getSubscriptionInfo() {{
   return {{
-    used: parseInt(localStorage.getItem('arses_sub_used') || '0'),
-    limit: parseInt(localStorage.getItem('arses_sub_limit') || '0'),
-    expiry: localStorage.getItem('arses_sub_expiry') || null
+    used: parseInt(localStorage.getItem('rvg_sub_used') || '0'),
+    limit: parseInt(localStorage.getItem('rvg_sub_limit') || '0'),
+    expiry: localStorage.getItem('rvg_sub_expiry') || null
   }};
 }}
 

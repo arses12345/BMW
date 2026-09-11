@@ -22,7 +22,7 @@ from typing import Optional
 
 import httpx
 
-logger = logging.getLogger("arses-Gateway")
+logger = logging.getLogger("LOQ-Gateway")
 
 GRAPHQL_URL = "https://backboard.railway.app/graphql/v2"
 

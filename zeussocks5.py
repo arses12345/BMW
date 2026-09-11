@@ -11,7 +11,7 @@ from typing import Optional
 
 import bottokentcpproxy
 
-logger = logging.getLogger("arses-Gateway")
+logger = logging.getLogger("LOQ-Gateway")
 
 IDLE_TIMEOUT = 300  # ثانیه؛ اگه هر دو طرف ساکت بود می‌بندیمش
 

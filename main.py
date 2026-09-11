@@ -36,10 +36,6 @@ import secrets
 import sys
 import time
 import traceback
-from pathlib import Path as _Path
-_APP_ROOT = str(_Path(__file__).resolve().parent)
-if _APP_ROOT not in sys.path:
-    sys.path.insert(0, _APP_ROOT)
 import central
 import aiofiles
 from datetime import datetime, timedelta
@@ -73,11 +69,11 @@ except ImportError:
     psutil = None
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-logger = logging.getLogger("arses-Gateway")
+logger = logging.getLogger("LOQ-Gateway")
 
 IRAN_TZ = ZoneInfo("Asia/Tehran")
 
-app = FastAPI(title="arses Gateway - codebox", docs_url=None, redoc_url=None)
+app = FastAPI(title="LOQ Gateway - codebox", docs_url=None, redoc_url=None)
 
 # وقتی مستقیم با `python main.py` اجرا میشه، این ماژول با نام "__main__" ثبت
 # میشه نه "main". چون protocol/vless/vless.py و protocol/trojan/trojan.py با
@@ -103,7 +99,7 @@ app.add_middleware(
 # دلخواه دیگه پشتش باشه — همیشه همون دامنه‌ای که کاربر باهاش پنل رو باز کرده
 # توی لینک‌های تولیدشده ست می‌شه.
 _request_host_ctx: contextvars.ContextVar[str] = contextvars.ContextVar(
-    "arses_request_host", default=""
+    "loq_request_host", default=""
 )
 
 
@@ -137,18 +133,18 @@ async def _detect_public_host(request: Request, call_next):
 
 # ── Persistence ───────────────────────────────────────────────────────────────
 DATA_DIR = Path(os.environ.get("DATA_DIR", "/data"))
-DATA_FILE = DATA_DIR / "arses_state.json"
-SECRET_FILE = DATA_DIR / ".arses_secret"
+DATA_FILE = DATA_DIR / "loq_state.json"
+SECRET_FILE = DATA_DIR / ".loq_secret"
 SAVE_LOCK = asyncio.Lock()
 
 # ── Redis (اختیاری) ─────────────────────────────────────────────────────────────
 # اگه REDIS_URL ست بشه و اتصال برقرار بشه، کل state پنل (کانفیگ‌ها، گروه‌های ساب،
-# رمز پنل، node ها و node key ها — یعنی همون چیزی که تا الان توی arses_state.json
+# رمز پنل، node ها و node key ها — یعنی همون چیزی که تا الان توی loq_state.json
 # ذخیره می‌شد) به‌جای فایل محلی روی Redis نوشته/خونده میشه. این مشکل پاک‌شدن
 # دیتا روی پلتفرم‌هایی که دیسک بین دیپلوی‌ها پایدار نیست رو حل می‌کنه. اگه
 # Redis ست نشده باشه یا وصل نشه، پنل دقیقاً مثل قبل روی فایل محلی کار می‌کنه.
 REDIS_URL = os.environ.get("REDIS_URL", "").strip()
-REDIS_STATE_KEY = "arses:state"
+REDIS_STATE_KEY = "rvg:state"
 redis_client = None
 REDIS_CONNECTED = False
 
@@ -242,7 +238,7 @@ CONFIG = {
 
 def apply_logging_state():
     """logging.disable سطح‌بندی سراسریه (روی کل ماژول logging اثر می‌ذاره)، پس
-    یک‌جا همه‌ی logger های پروژه (arses-Gateway، uvicorn.access، uvicorn.error،
+    یک‌جا همه‌ی logger های پروژه (LOQ-Gateway، uvicorn.access، uvicorn.error،
     mtproto و ...) رو خاموش/روشن می‌کنه. چک داخلیش خیلی ارزونه، پس این خودش
     باعث می‌شه سربار I/O و فرمت‌کردن استرینگ لاگ‌ها کاملاً حذف بشه."""
     if CONFIG.get("disable_logging"):
@@ -396,8 +392,8 @@ NODES: dict = {}
 NODES_LOCK = asyncio.Lock()
 _NODE_CACHE: dict = {}          # node_id -> {"at": float, "data": dict}
 NODE_CACHE_TTL = 8.0
-NODE_KEY_PREFIX = "arses-"
-NODE_KEY_HEADER = "X-arses-Node-Key"
+NODE_KEY_PREFIX = "rvg-"
+NODE_KEY_HEADER = "X-LOQ-Node-Key"
 NODE_SHARE_PARTS = ("usage", "links", "subs", "requests", "logs")
 
 PROTOCOLS = (
@@ -417,13 +413,13 @@ def log_activity(kind: str, message: str, level: str = "info"):
 
 
 # ── Auth ──────────────────────────────────────────────────────────────────────
-SESSION_COOKIE = "arses_session"
+SESSION_COOKIE = "rvg_session"
 SESSION_TTL = 60 * 60 * 24 * 7
 
 def hash_password(pw: str) -> str:
     return hashlib.sha256(f"{pw}{CONFIG['secret']}".encode()).hexdigest()
 
-AUTH = {"password_hash": hash_password(os.environ.get("ADMIN_PASSWORD", "165790"))}
+AUTH = {"password_hash": hash_password(os.environ.get("ADMIN_PASSWORD", "123456"))}
 SESSIONS: dict = {}
 SESSIONS_LOCK = asyncio.Lock()
 
@@ -473,7 +469,7 @@ async def startup():
     await load_state()
     await _restart_mtproto_instances()
     log_activity("system", "سرور راه‌اندازی شد", "ok")
-    logger.info(f"arses Gateway v9.2 started on port {CONFIG['port']}")
+    logger.info(f"LOQ Gateway v9.2 started on port {CONFIG['port']}")
 
 async def _restart_mtproto_instances():
     """بعد از بالا اومدن پنل، به‌ازای هر لینک MTProto فعال یک پروسه‌ی جدای
@@ -616,7 +612,7 @@ async def _update_mtproto_ad_tag(uuid: str, ad_tag: str):
             link["ad_tag"] = ad_tag
             link["ad_tag_status"] = "done"
             link["ad_tag_link"] = generate_share_link(
-                uuid, get_host(), remark=f"arses-{link.get('label','')}", protocol="mtproto"
+                uuid, get_host(), remark=f"LOQ-{link.get('label','')}", protocol="mtproto"
             )
 
         if inst["port"] != old_port and old_proxy_id and not manual_port:
@@ -669,7 +665,7 @@ def generate_uuid() -> str:
 def now_ir() -> datetime:
     return datetime.now(IRAN_TZ)
 
-def generate_share_link(uuid: str, host: str, remark: str = "arses", protocol: str = DEFAULT_PROTOCOL) -> str:
+def generate_share_link(uuid: str, host: str, remark: str = "LOQ", protocol: str = DEFAULT_PROTOCOL) -> str:
     link = LINKS.get(uuid) or {}
     alpn = link.get("alpn", "h2")
     fp = link.get("fingerprint", "chrome")
@@ -827,7 +823,7 @@ def parse_node_key(key: str) -> tuple[str, str]:
     """برمی‌گرداند (host, secret). در صورت نامعتبر بودن ValueError می‌دهد."""
     key = (key or "").strip()
     if not key.startswith(NODE_KEY_PREFIX):
-        raise ValueError("کلید باید با arses- شروع شود")
+        raise ValueError("کلید باید با rvg- شروع شود")
     body = key[len(NODE_KEY_PREFIX):]
     if "." not in body:
         raise ValueError("ساختار کلید نامعتبر است")
@@ -888,7 +884,7 @@ async def _node_request(node: dict, method: str, path: str, *,
 
 
 async def require_node_key(request: Request) -> str:
-    """احراز هویت پنل مقابل با هدر X-arses-Node-Key (بدون کوکی سشن)."""
+    """احراز هویت پنل مقابل با هدر X-LOQ-Node-Key (بدون کوکی سشن)."""
     raw = (request.headers.get(NODE_KEY_HEADER) or "").strip()
     if not raw:
         raise HTTPException(status_code=401, detail="node key missing")
@@ -942,7 +938,7 @@ async def ensure_default_link():
 # ── Basic endpoints ───────────────────────────────────────────────────────────
 @app.get("/")
 async def root():
-    return {"service": "arses Gateway", "version": "9.2", "status": "active", "channel": "https://t.me/CodeBoxo"}
+    return {"service": "LOQ Gateway", "version": "9.2", "status": "active", "channel": "https://t.me/CodeBoxo"}
 
 @app.get("/health")
 async def health():
@@ -957,7 +953,7 @@ async def subscription_single(uuid: str):
         raise HTTPException(status_code=404, detail="not found or inactive")
     host = get_host()
     proto = link.get("protocol", DEFAULT_PROTOCOL)
-    vless = generate_share_link(uuid, host, remark=f"arses-{link['label']}", protocol=proto)
+    vless = generate_share_link(uuid, host, remark=f"LOQ-{link['label']}", protocol=proto)
     content = base64.b64encode(vless.encode()).decode()
     headers = build_sub_headers(link["label"], link.get("used_bytes", 0), link.get("limit_bytes", 0), link.get("expires_at"))
     return Response(content=content, media_type="text/plain", headers=headers)
@@ -968,7 +964,7 @@ async def subscription_all(_=Depends(require_auth)):
     async with LINKS_LOCK:
         allowed = [d for d in LINKS.values() if is_link_allowed(d)]
         lines = [
-            generate_share_link(uid, host, remark=f"arses-{d['label']}", protocol=d.get("protocol", DEFAULT_PROTOCOL))
+            generate_share_link(uid, host, remark=f"LOQ-{d['label']}", protocol=d.get("protocol", DEFAULT_PROTOCOL))
             for uid, d in LINKS.items()
             if is_link_allowed(d)
         ]
@@ -977,7 +973,7 @@ async def subscription_all(_=Depends(require_auth)):
         expiries = [d["expires_at"] for d in allowed if d.get("expires_at")]
     nearest_exp = min(expiries) if expiries else None
     content = base64.b64encode("\n".join(lines).encode()).decode()
-    headers = build_sub_headers("arses-All", total_used, total_limit, nearest_exp)
+    headers = build_sub_headers("LOQ-All", total_used, total_limit, nearest_exp)
     return Response(content=content, media_type="text/plain", headers=headers)
 
 
@@ -1184,7 +1180,7 @@ async def sub_group_subscription(uuid_key: str, request: Request):
         for lid in link_ids:
             link = LINKS.get(lid)
             if link and is_link_allowed(link):
-                lines.append(generate_share_link(lid, host, remark=f"arses-{link['label']}", protocol=link.get("protocol", DEFAULT_PROTOCOL)))
+                lines.append(generate_share_link(lid, host, remark=f"LOQ-{link['label']}", protocol=link.get("protocol", DEFAULT_PROTOCOL)))
                 allowed_links.append(link)
         total_used = sum(l.get("used_bytes", 0) for l in allowed_links)
         total_limit = sum(l.get("limit_bytes", 0) for l in allowed_links)
@@ -1284,7 +1280,7 @@ async def backup_export(_=Depends(require_auth)):
     async with NODES_LOCK:
         nodes_snap = dict(NODES)
     data = {
-        "kind": "arses-backup",
+        "kind": "rvg-backup",
         "version": "9.2",
         "exported_at": datetime.now().isoformat(),
         "host": get_host(),
@@ -1295,7 +1291,7 @@ async def backup_export(_=Depends(require_auth)):
         "password_hash": AUTH["password_hash"],
     }
     content = json.dumps(data, ensure_ascii=False, indent=2)
-    filename = f"arses-backup-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
+    filename = f"rvg-backup-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
     log_activity("system", "فایل بکاپ دانلود شد", "info")
     return Response(
         content=content,
@@ -1461,7 +1457,7 @@ async def api_mtproto_fix_proxy(request: Request, _=Depends(require_auth)):
         fixed.append({
             "uuid": uid, "label": label,
             "host": pub["domain"], "port": pub["port"],
-            "link": generate_share_link(uid, get_host(), remark=f"arses-{label}", protocol="mtproto"),
+            "link": generate_share_link(uid, get_host(), remark=f"LOQ-{label}", protocol="mtproto"),
         })
         log_activity("link", f"TCP Proxy عمومی «{label}» ساخته شد ({pub['domain']}:{pub['port']})", "ok")
 
@@ -1610,7 +1606,7 @@ async def api_bot_tcp_proxy_attach(request: Request, _=Depends(require_auth)):
 
     asyncio.create_task(save_state())
     host = get_host()
-    share_link = generate_share_link(uid, host, remark=f"arses-{cur_label}", protocol="mtproto")
+    share_link = generate_share_link(uid, host, remark=f"LOQ-{cur_label}", protocol="mtproto")
     if not attached_link:
         attached_link = {"uuid": uid, "label": cur_label}
     log_activity(
@@ -1921,7 +1917,7 @@ async def _create_link_core(body: dict) -> dict:
         "uuid": uid,
         **LINKS[uid],
         "expired": False,
-        "vless_link": generate_share_link(uid, host, remark=f"arses-{label}", protocol=protocol),
+        "vless_link": generate_share_link(uid, host, remark=f"LOQ-{label}", protocol=protocol),
         "sub_url": f"https://{host}/sub/{uid}",
     }
 
@@ -1963,7 +1959,7 @@ async def list_links(_=Depends(require_auth)):
             **extra,
             "protocol": proto,
             "expired": is_link_expired(d),
-            "vless_link": generate_share_link(uid, host, remark=f"arses-{d['label']}", protocol=proto),
+            "vless_link": generate_share_link(uid, host, remark=f"LOQ-{d['label']}", protocol=proto),
             "sub_url": f"https://{host}/sub/{uid}",
         })
     result.sort(key=lambda x: x["created_at"], reverse=True)
@@ -2140,7 +2136,7 @@ async def delete_link(uid: str, _=Depends(require_auth)):
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Node linking — inbound (این پنل صادرکننده‌ی کلید است)
-# احراز هویت این بخش با هدر X-arses-Node-Key انجام می‌شود، نه کوکی سشن.
+# احراز هویت این بخش با هدر X-LOQ-Node-Key انجام می‌شود، نه کوکی سشن.
 # ══════════════════════════════════════════════════════════════════════════════
 def _parse_parts(raw: str | None) -> set[str]:
     if not raw:
@@ -2812,7 +2808,7 @@ async def public_sub_data(uuid_key: str, request: Request):
             "protocol": proto,
             "used_bytes": link.get("used_bytes", 0),
             "limit_bytes": link.get("limit_bytes", 0),
-            "vless_link": generate_share_link(lid, host, remark=f"arses-{link['label']}", protocol=proto),
+            "vless_link": generate_share_link(lid, host, remark=f"LOQ-{link['label']}", protocol=proto),
         })
 
     # ۲.۵ کانفیگ‌های نودهای دیگر

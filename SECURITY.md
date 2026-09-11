@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-The following versions of arses are currently receiving security updates:
+The following versions of Rvg are currently receiving security updates:
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -13,7 +13,7 @@ The following versions of arses are currently receiving security updates:
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in arses, please **do not** open a public GitHub issue.
+If you discover a security vulnerability in Rvg, please **do not** open a public GitHub issue.
 
 Instead, report it privately through the following channel:
 
@@ -25,7 +25,7 @@ Please include as much of the following information as possible:
 
 - A description of the vulnerability and its potential impact
 - Steps to reproduce the issue (proof-of-concept code, if available)
-- The version/commit of arses affected
+- The version/commit of Rvg affected
 - Any suggested fix or mitigation, if you have one
 
 ## Response Process
@@ -37,7 +37,7 @@ Please include as much of the following information as possible:
 
 ## Scope
 
-This policy covers the arses source code in this repository. Issues in third-party dependencies should be reported to their respective maintainers, though we appreciate being notified as well.
+This policy covers the Rvg source code in this repository. Issues in third-party dependencies should be reported to their respective maintainers, though we appreciate being notified as well.
 
 ## Recognition
 
@@ -45,4 +45,4 @@ We're happy to credit security researchers who responsibly report valid vulnerab
 
 ---
 
-Thank you for helping keep arses and its users safe.
+Thank you for helping keep Rvg and its users safe.

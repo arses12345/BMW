@@ -219,7 +219,7 @@ async def get_latest_version() -> dict:
 
 def _check_writable() -> str | None:
     try:
-        probe = APP_DIR / ".arses_write_test"
+        probe = APP_DIR / ".loq_write_test"
         probe.write_text("ok")
         probe.unlink()
         return None
@@ -271,7 +271,7 @@ async def _download_one_file(client: httpx.AsyncClient, entry: dict) -> tuple[bo
             if actual != expected_sha1:
                 return False, f"عدم تطابق sha1 برای {rel} (دانلود ناقص/خراب)"
         target.parent.mkdir(parents=True, exist_ok=True)
-        tmp_target = target.with_name(target.name + ".arsestmp")
+        tmp_target = target.with_name(target.name + ".loqtmp")
         tmp_target.write_bytes(content)
         os.replace(tmp_target, target)
         return True, ""
